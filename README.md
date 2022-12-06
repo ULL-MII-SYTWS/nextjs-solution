@@ -35,6 +35,13 @@ Choose View API Keys.
    $ npm install
    ```
 
+   Which installs the dependencies listed in `package.json`:
+
+   ```json
+   ✗ jq -c '.dependencies | keys' package.json
+   ["next","openai","react","react-dom"]
+   ```
+
 5. Make a copy of the example environment variables file
 
    ```bash
@@ -49,22 +56,56 @@ Choose View API Keys.
    $ npm run dev
    ```
 
-The consolo shows:
+   The console shows:
 
-``` 
-➜  openai-quickstart-node git:(master) ✗ npm run dev
+   ``` 
+   ➜  openai-quickstart-node git:(master) ✗ npm run dev
 
-> openai-quickstart-node@0.1.0 dev
-> next dev
+   > openai-quickstart-node@0.1.0 dev
+   > next dev
 
-ready - started server on 0.0.0.0:3000, url: http://localhost:3000
-info  - Loaded env from /Users/casianorodriguezleon/campus-virtual/2223/learning/openai-learning/openai-quickstart-node/.env
-wait  - compiling...
-event - compiled client and server successfully in 1174 ms (113 modules)
-```
+   ready - started server on 0.0.0.0:3000, url: http://localhost:3000
+   info  - Loaded env from /Users/casianorodriguezleon/campus-virtual/2223/learning/openai-learning/openai-quickstart-node/.env
+   wait  - compiling...
+   event - compiled client and server successfully in 1174 ms (113 modules)
+   ```
 
-You should now be able to access the app at [http://localhost:3000](http://localhost:3000)! 
+8. You should now be able to access the app at [http://localhost:3000](http://localhost:3000)! 
 
-![](docs/images/local-app-runnning.png)
+   ![](docs/images/local-app-runnning.png)
+
 
 For the full context behind this example app, check out the [tutorial](https://beta.openai.com/docs/quickstart).
+
+## pages/api/generate.js
+
+```js
+import { Configuration, OpenAIApi } from "openai";
+
+const configuration = new Configuration({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+const openai = new OpenAIApi(configuration);
+
+export default async function (req, res) {
+  const completion = await openai.createCompletion({
+    model: "text-davinci-002",
+    prompt: generatePrompt(req.body.animal),
+    temperature: 0.6,
+  });
+  res.status(200).json({ result: completion.data.choices[0].text });
+}
+
+function generatePrompt(animal) {
+  const capitalizedAnimal =
+    animal[0].toUpperCase() + animal.slice(1).toLowerCase();
+  return `Suggest three names for an animal that is a superhero.
+
+Animal: Cat
+Names: Captain Sharpclaw, Agent Fluffball, The Incredible Feline
+Animal: Dog
+Names: Ruff the Protector, Wonder Canine, Sir Barks-a-Lot
+Animal: ${capitalizedAnimal}
+Names:`;
+}
+```
