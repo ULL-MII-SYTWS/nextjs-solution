@@ -212,16 +212,16 @@ Express.js-like helper methods to improve the developer experience and increase 
 
 * `req.cookies` - An object containing the cookies sent by the request. Defaults to `{}`
 * `req.query` - An object containing the query string. Defaults to `{}`
-* `req.body` - An object containing the body parsed by content-type, or `null` if no body was sent
+* `req.body` - An object containing the `body` parsed by `content-type`, or `null` if no body was sent
 
    See the code fragment `generatePrompt(req.body.animal)`
 
 The **Server Response object**, ( abbreviated as `res`) includes a set of 
 Express.js-like helper methods to improve the developer experience and increase the speed of creating new API endpoints:
 
-* res.status(code) - A function to set the status code. code must be a valid HTTP status code
-* res.json(body) - Sends a JSON response. body must be a serializable object
-* res.send(body) - Sends the HTTP response. body can be a string, an object or a Buffer
+* `res.status(code)` - A function to set the status code. code must be a valid HTTP status code
+* `res.json(body)` - Sends a JSON response. body must be a serializable object
+* `res.send(body)` - Sends the HTTP response. body can be a string, an object or a Buffer
 
    See the code fragment `res.status(200).json({ result: completion.data.choices[0].text });`
 * res.redirect([status,] path) - Redirects to a specified path or URL. status must be a valid HTTP status code. If not specified, status defaults to "307" "Temporary redirect".
