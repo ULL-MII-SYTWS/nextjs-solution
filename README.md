@@ -378,10 +378,12 @@ In that sense, they are similar to variables declared with the `let` keyword.
 
 The difference between a **React state** and a 
 normal variable is that when a **React state variable** changes, 
-the **component is rendered again** and the `useEffects` 
+the **component is rendered again** and some other things happens, like that 
+the `useEffect` hook
 bound to that state will be executed, 
 but when a normal variable changes, this does not happen.
- 
+(The `useEffect` Hook allows us to perform side effects in our components.
+It can be used to fetch data from an API, subscribe to a service, ...)
 
 ```js
 import { useState } from "react";
@@ -416,6 +418,7 @@ export default function Home() {
 }
 ```
 
+In this code we have two states: `animalInput` and `result`.
 
 ## build
 
