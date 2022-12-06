@@ -117,7 +117,7 @@ With Next.js, three types of rendering methods are available:
    
    ![](https://nextjs.org/static/images/learn/foundations/pre-rendering.png)
 
-   On the client, the HTML is used to show a fast non-interactive page, while React uses the JSON data and JavaScript instructions to make components interactive (for example, attaching event handlers to a button). This process is called **hydration**.
+   On the client, the HTML is used to show a fast non-interactive page, while React uses the JSON data and JavaScript instructions to make components interactive. This process is called **hydration**.
 2. Static Site Generation, and 
 3. Client-Side Rendering.
    
