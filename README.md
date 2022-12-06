@@ -420,6 +420,11 @@ export default function Home() {
 
 In this code we have two states: `animalInput` and `result`.
 
+Therefore, 
+
+1. each time the `animalInput` state changes, the component is rendered again and the `useEffect` hook bound to that state will be executed.
+2. each time the `result` state changes, the component is rendered again and the `useEffect` hook bound to that state will be executed.
+
 ## build
 
 `next build` creates an optimized production build of your application. 
