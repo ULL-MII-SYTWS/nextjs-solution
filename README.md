@@ -114,8 +114,12 @@ It can happen either
 With Next.js, three types of rendering methods are available:
 
 1. Server-Side Rendering, 
+   
+   ![](https://nextjs.org/static/images/learn/foundations/pre-rendering.png)
 2. Static Site Generation, and 
 3. Client-Side Rendering.
+   
+   ![](https://nextjs.org/static/images/learn/foundations/client-side-rendering.png)
 
 **Server-Side Rendering** and **Static Site Generation** are also referred to as **Pre-Rendering** 
 because the fetching of external data and transformation of components into HTML happens **before** 
