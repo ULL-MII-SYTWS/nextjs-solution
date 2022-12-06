@@ -210,9 +210,9 @@ In Netlify you can use the Netlify UI. Head over to the Build & Deploy settings 
 The **Server Request Object** (`req`) includes a set of 
 Express.js-like helper methods to improve the developer experience and increase the speed of creating new API endpoints:
 
-* req.cookies - An object containing the cookies sent by the request. Defaults to {}
-* req.query - An object containing the query string. Defaults to {}
-* req.body - An object containing the body parsed by content-type, or `null` if no body was sent
+* `req.cookies` - An object containing the cookies sent by the request. Defaults to `{}`
+* `req.query` - An object containing the query string. Defaults to `{}`
+* `req.body` - An object containing the body parsed by content-type, or `null` if no body was sent
 
    See the code fragment `generatePrompt(req.body.animal)`
 
