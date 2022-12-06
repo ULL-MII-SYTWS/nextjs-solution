@@ -425,6 +425,55 @@ Therefore,
 1. each time the `animalInput` state changes, the component is rendered again and the `useEffect` hook bound to that state will be executed.
 2. each time the `result` state changes, the component is rendered again and the `useEffect` hook bound to that state will be executed.
 
+The `useState` hook **allows us to create state variables for our components**. 
+
+`useState` takes in an initial value as an argument and returns an array containing 
+
+1. the **state** variable and 
+2. a **setter** function to mutate it
+ 
+It is common practice to de-structure this array and set its contents to be `const`. 
+This is because 
+
+* the state variable **should never be reassigned directly** and
+* **should only be modified via the setter function**. 
+
+The `setter` function accepts either a new value or a function which takes the current value as an argument and returns the new value like this:
+
+```js
+setResult(data.result); // data just arrived from the API
+```
+
+Since `data`has arrived from the API, we can set the `result` state to the value of `data.result`.
+The `<div className={styles.result}>{result}</div>`has to be rendered again.
+
+Th effect of this statement 
+
+```js
+setAnimalInput("");
+```
+is that the 
+```jsx 
+<input  type="text" name="animal" placeholder="Enter an animal"
+            value={animalInput}
+            onChange={(e) => setAnimalInput(e.target.value)}
+/>
+```
+
+will be rendered again with an empty value.
+
+The call to `setAnimalInput(e.target.value)` here:
+   
+```jsx
+<input  type="text" name="animal" placeholder="Enter an animal"
+   value={animalInput}
+   onChange={(e) => setAnimalInput(e.target.value)}
+/>
+```
+
+will be executed each time the user types a character in the `input` field.
+
+
 ## build
 
 `next build` creates an optimized production build of your application. 
