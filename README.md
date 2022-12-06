@@ -2,6 +2,7 @@
   - [Introduction](#introduction)
   - [Generating an API key](#generating-an-api-key)
   - [Setup](#setup)
+  - [Rendering](#rendering)
   - [next.js Pages](#nextjs-pages)
     - [References](#references)
   - [pages/api/generate.js](#pagesapigeneratejs)
@@ -97,6 +98,29 @@ Choose View API Keys.
 
 
 For the full context behind this example app, check out the [tutorial](https://beta.openai.com/docs/quickstart).
+
+## Rendering
+
+**Rendering** is the conversion of the code you write in React into the HTML representation of your User Interface. 
+Rendering can take place 
+1. on the server or 
+2. on the client. 
+   
+It can happen either 
+
+1. ahead of time at **build time**, or 
+2. on every request at runtime.
+
+With Next.js, three types of rendering methods are available:
+
+1. Server-Side Rendering, 
+2. Static Site Generation, and 
+3. Client-Side Rendering.
+
+**Server-Side Rendering** and **Static Site Generation** are also referred to as **Pre-Rendering** 
+because the fetching of external data and transformation of components into HTML happens **before** 
+the result is sent to the client.
+
 
 ## next.js Pages
 
