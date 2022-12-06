@@ -1,3 +1,24 @@
+- [OpenAI API Quickstart - Node.js example app](#openai-api-quickstart---nodejs-example-app)
+  - [Introduction](#introduction)
+  - [Generating an API key](#generating-an-api-key)
+  - [Setup](#setup)
+  - [next.js Pages](#nextjs-pages)
+    - [References](#references)
+  - [pages/api/generate.js](#pagesapigeneratejs)
+    - [`process.env.OPENAI_API_KEY`](#processenvopenai_api_key)
+      - [References](#references-1)
+    - [`const completion = await openai.createCompletion({ ... })`](#const-completion--await-openaicreatecompletion--)
+  - [pages/index.js](#pagesindexjs)
+    - [`import Head from "next/head"`](#import-head-from-nexthead)
+    - [`import styles from "./index.module.css"`](#import-styles-from-indexmodulecss)
+    - [`<link rel="icon" href="/dog.png" />`](#link-relicon-hrefdogpng-)
+    - [`<main className={styles.main}>`](#main-classnamestylesmain)
+    - [`<form onSubmit={onSubmit}> ...</form>`](#form-onsubmitonsubmit-form)
+    - [`const response = await fetch("/api/generate", { ... })`](#const-response--await-fetchapigenerate---)
+  - [State in React](#state-in-react)
+  - [build](#build)
+  - [Production](#production)
+
 # OpenAI API Quickstart - Node.js example app
 
 ## Introduction
@@ -77,7 +98,26 @@ Choose View API Keys.
 
 For the full context behind this example app, check out the [tutorial](https://beta.openai.com/docs/quickstart).
 
+## next.js Pages
+
+In Next.js, a page is a React Component exported from a .js, .jsx, .ts, or .tsx file in the `pages` directory. 
+
+Each page is associated with a **route** based on its file name.
+
+Since we have the file `pages/api/generate.js` that exports a React component, Next.js will make it accessible at the route `/api/generate`.
+
+The `index.js` file is the main page `/` for the app. 
+
+By default, Next.js includes its own server which is started with `next start`.
+
+### References
+
+See <https://nextjs.org/docs/basic-features/pages>
+
 ## pages/api/generate.js
+
+See <https://www.npmjs.com/package/openai>. Check out the [full API documentation](https://beta.openai.com/docs/api-reference?lang=node.js) for examples of all the available functions in `openai`.
+
 
 ```js
 import { Configuration, OpenAIApi } from "openai";
@@ -109,3 +149,293 @@ Animal: ${capitalizedAnimal}
 Names:`;
 }
 ```
+
+### `process.env.OPENAI_API_KEY` 
+
+Next.js allows you to set environment variables in 
+
+1. `.env` (all environments), 
+2. `.env.development` (development environment), and 
+3. `.env.production` (production environment).
+4. `.env.local` always overrides the defaults set.
+
+The variables are accesible into `process.env`.
+
+By default environment variables are only available in the Node.js environment, 
+meaning they won't be exposed to the browser.
+
+In order to expose a variable to the browser you have to prefix the variable with `NEXT_PUBLIC_`. 
+
+When deploying your Next.js application to Vercel, Environment Variables can be configured in the [Project Settings](https://vercel.com/docs/concepts/projects/environment-variables?utm_source=next-site&utm_medium=docs&utm_campaign=next-website).
+
+In Netlify you can use the Netlify UI. Head over to the Build & Deploy settings in your Site Settings, and then plug your values in under "Environment variables" or alternatively, use the [Netlify CLI](https://docs.netlify.com/cli/get-started/?_ga=2.210632407.351830897.1670331128-1485033729.1667990322#link-with-an-environment-variable)
+
+#### References
+
+* <https://nextjs.org/docs/basic-features/environment-variables>
+
+### `const completion = await openai.createCompletion({ ... })`
+
+See the documentation at  <https://beta.openai.com/docs/api-reference/completions/create>
+
+It makes a POST request to <https://api.openai.com/v1/completions>:
+
+In the JSON body goes:
+
+* `model`: `ID` of the model to use. You can use the List models API to see all of your available models
+* `prompt`: string to generate completions for, encoded as a string, array of strings, array of tokens, or array of token arrays.
+* `temperature`: Higher values means the model will take more risks. Try 0.9 for more creative applications, and 0  for ones with a well-defined answer.
+
+The response is a JSON object with the following fields:
+
+```json
+{
+  "id": "cmpl-uqkvlQyYK7bGYrRHQ0eXlWi7",
+  "object": "text_completion",
+  "created": 1589478378,
+  "model": "text-davinci-003",
+  "choices": [
+    {
+      "text": "\n\nThis is indeed a test",
+      "index": 0,
+      "logprobs": null,
+      "finish_reason": "length"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 5,
+    "completion_tokens": 7,
+    "total_tokens": 12
+  }
+}
+```
+
+## pages/index.js
+
+```js
+import Head from "next/head";
+import { useState } from "react";
+import styles from "./index.module.css";
+
+export default function Home() {
+  const [animalInput, setAnimalInput] = useState("");
+  const [result, setResult] = useState();
+
+  async function onSubmit(event) {
+    event.preventDefault();
+    const response = await fetch("/api/generate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ animal: animalInput }),
+    });
+    const data = await response.json();
+    setResult(data.result);
+    setAnimalInput("");
+  }
+  return (
+    <div>
+      <Head>
+        <title>OpenAI Quickstart</title>
+        <link rel="icon" href="/dog.png" />
+      </Head>
+
+      <main className={styles.main}>
+        <img src="/dog.png" className={styles.icon} />
+        <h3>Name my pet</h3>
+        <form onSubmit={onSubmit}>
+          <input
+            type="text"
+            name="animal"
+            placeholder="Enter an animal"
+            value={animalInput}
+            onChange={(e) => setAnimalInput(e.target.value)}
+          />
+          <input type="submit" value="Generate names" />
+        </form>
+        <div className={styles.result}>{result}</div>
+      </main>
+    </div>
+  );
+}
+```
+
+### `import Head from "next/head"`
+
+nextjs provides a built-in component for appending elements to the `head` of the page so that it can 
+be used in the JSX of the page:
+
+```jsx
+<Head>
+   <title>OpenAI Quickstart</title>
+   <link rel="icon" href="/dog.png" />
+</Head>
+```
+
+### `import styles from "./index.module.css"`
+
+This is a [CSS module](https://nextjs.org/docs/basic-features/built-in-css-support#adding-component-level-css). 
+
+Next.js supports CSS Modules using the `[name].module.css` file naming convention.
+
+CSS Modules locally scope CSS by automatically creating a unique class name. 
+
+This allows you to use the same CSS class name in different files without worrying about collisions.
+
+###  `<link rel="icon" href="/dog.png" />`
+
+This line in the `<Head>` component adds a favicon to the page. 
+You'll find the image in the `public` directory.
+
+Next.js can serve static files, like images, under a folder called `public` in the root directory.
+Files inside `public` can then be referenced by your code starting from the base URL (`/`).
+
+### `<main className={styles.main}>`
+
+JSX lets you write HTML-like markup inside a JavaScript file, keeping rendering logic and content in the same place. 
+
+Sometimes you will want to add a little JavaScript logic or reference a dynamic property inside that markup. 
+
+In this situation, you can use curly braces in your JSX to open a window to JavaScript.
+
+The only reason behind the fact that JSX uses `className` over `class` is that the `class` is a reserved keyword in JavaScript.
+
+We are specifying that the `<main>` element should use the `main` class from the `index.module.css` file.
+
+### `<form onSubmit={onSubmit}> ...</form>`
+
+The `onSubmit` **prop** is a special React **prop** that lets you specify a function that will be called when the form is submitted.
+
+The async function `onSubmit` is called when the form is submitted:
+
+```js
+  async function onSubmit(event) {
+    event.preventDefault();
+    const response = await fetch("/api/generate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ animal: animalInput }),
+    });
+    const data = await response.json();
+    setResult(data.result);
+    setAnimalInput("");
+  }
+```
+
+### `const response = await fetch("/api/generate", { ... })`
+
+The `fetch` function makes a request to the `/api/generate` endpoint of the nextjs server. 
+
+Thus, the exported function in `pages/api/generate.js` is called and the JSON  returned at line
+
+```js
+  res.status(200).json({ result: completion.data.choices[0].text });
+```
+
+will be received in `data` after the second `await`:
+
+```
+const data = await response.json()
+```
+
+## State in React
+
+**React states** are used to store data that can be changed over time.
+In that sense, they are similar to variables declared with the `let` keyword.
+
+The difference between a **React state** and a 
+normal variable is that when a **React state variable** changes, 
+the **component is rendered again** and the `useEffects` 
+bound to that state will be executed, 
+but when a normal variable changes, this does not happen.
+ 
+
+```js
+import { useState } from "react";
+// ...
+
+export default function Home() {
+  const [animalInput, setAnimalInput] = useState("");
+  const [result, setResult] = useState();
+
+  async function onSubmit(event) {
+    // ...
+    const data = await response.json();
+    setResult(data.result);
+    setAnimalInput("");
+  }
+  return (
+    <div>
+      <.../>
+      <main className={styles.main}>
+        <.../>
+        <form onSubmit={onSubmit}>
+          <input  type="text" name="animal" placeholder="Enter an animal"
+            value={animalInput}
+            onChange={(e) => setAnimalInput(e.target.value)}
+          />
+          <input type="submit" value="Generate names" />
+        </form>
+        <div className={styles.result}>{result}</div>
+      </main>
+    </div>
+  );
+}
+```
+
+
+## build
+
+`next build` creates an optimized production build of your application. 
+You can enable more verbose build output with the `--debug` flag in next build.
+
+The output displays information about each route:
+
+
+``` 
+➜✗ npx next build --debug
+info  - Loaded env from /Users/casianorodriguezleon/campus-virtual/2223/learning/openai-learning/openai-quickstart-node/.env
+info  - Creating an optimized production build  
+info  - Compiled successfully
+info  - Collecting page data  
+info  - Generating static pages (3/3)
+info  - Finalizing page optimization  
+
+Page                                       Size     First Load JS
+┌ ○ /                                      998 B          73.8 kB
+├   └ css/fc2c832f265f4111.css             522 B
+├ ○ /404                                   193 B            73 kB
+└ λ /api/generate                          0 B            72.8 kB
++ First Load JS shared by all              72.8 kB
+  ├ chunks/framework-e70c6273bfe3f237.js   42 kB
+  ├ chunks/main-f65e66e62fc5ca80.js        28.6 kB
+  ├ chunks/pages/_app-02d0f4839caa4a8e.js  1.36 kB
+  └ chunks/webpack-69bfa6990bb9e155.js     769 B
+
+λ  (Server)  server-side renders at runtime (uses getInitialProps or getServerSideProps)
+○  (Static)  automatically rendered as static HTML (uses no initial props)
+
+Redirects
+
+┌ source: /:path+/
+├ destination: /:path+
+└ permanent: true
+```
+
+This generates the site in the `.next` directory.
+
+## Production
+
+`next start` starts the application in *production* mode. 
+The application should be compiled with `next build` before starting.
+
+```
+npx next start -p 4000
+
+ready - started server on 0.0.0.0:4000, url: http://localhost:4000
+info  - Loaded env from /Users/casianorodriguezleon/campus-virtual/2223/learning/openai-learning/openai-quickstart-node/.env
+```
+

@@ -17,12 +17,15 @@ export default async function (req, res) {
 function generatePrompt(animal) {
   const capitalizedAnimal =
     animal[0].toUpperCase() + animal.slice(1).toLowerCase();
-  return `Suggest three names for an animal that is a superhero.
+  console.log(capitalizedAnimal);
+  const suggestion = `Suggest four names for an animal that is a superhero.
 
 Animal: Cat
-Names: Captain Sharpclaw, Agent Fluffball, The Incredible Feline
+Names: Captain Sharpclaw, Agent Fluffball, The Incredible Feline, Mica
 Animal: Dog
-Names: Ruff the Protector, Wonder Canine, Sir Barks-a-Lot
+Names: Ruff the Protector, Wonder Canine, Sir Barks-a-Lot, Tiger
 Animal: ${capitalizedAnimal}
 Names:`;
+  console.log(suggestion);
+  return suggestion;
 }
