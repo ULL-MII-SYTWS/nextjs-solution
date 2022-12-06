@@ -8,6 +8,7 @@
   - [pages/api/generate.js](#pagesapigeneratejs)
     - [`process.env.OPENAI_API_KEY`](#processenvopenai_api_key)
       - [References](#references-1)
+    - [`export default async function (req, res) { ... }`](#export-default-async-function-req-res---)
     - [`const completion = await openai.createCompletion({ ... })`](#const-completion--await-openaicreatecompletion--)
   - [pages/index.js](#pagesindexjs)
     - [`import Head from "next/head"`](#import-head-from-nexthead)
@@ -101,7 +102,7 @@ For the full context behind this example app, check out the [tutorial](https://b
 
 ## Rendering
 
-**Rendering** is the conversion of the code you write in React into the HTML representation of your User Interface. 
+**Rendering** is the conversion of the code you write in your reactive framework (React/Vue/AngularJS) into the HTML representation of your User Interface. 
 Rendering can take place 
 1. on the server or 
 2. on the client. 
@@ -203,6 +204,28 @@ In Netlify you can use the Netlify UI. Head over to the Build & Deploy settings 
 #### References
 
 * <https://nextjs.org/docs/basic-features/environment-variables>
+
+### `export default async function (req, res) { ... }`
+
+The **Server Request Object** (`req`) includes a set of 
+Express.js-like helper methods to improve the developer experience and increase the speed of creating new API endpoints:
+
+* req.cookies - An object containing the cookies sent by the request. Defaults to {}
+* req.query - An object containing the query string. Defaults to {}
+* req.body - An object containing the body parsed by content-type, or `null` if no body was sent
+
+   See the code fragment `generatePrompt(req.body.animal)`
+
+The **Server Response object**, ( abbreviated as `res`) includes a set of 
+Express.js-like helper methods to improve the developer experience and increase the speed of creating new API endpoints:
+
+* res.status(code) - A function to set the status code. code must be a valid HTTP status code
+* res.json(body) - Sends a JSON response. body must be a serializable object
+* res.send(body) - Sends the HTTP response. body can be a string, an object or a Buffer
+
+   See the code fragment `res.status(200).json({ result: completion.data.choices[0].text });`
+* res.redirect([status,] path) - Redirects to a specified path or URL. status must be a valid HTTP status code. If not specified, status defaults to "307" "Temporary redirect".
+* res.revalidate(urlPath) - Revalidate a page on demand using getStaticProps. urlPath must be a string.
 
 ### `const completion = await openai.createCompletion({ ... })`
 
